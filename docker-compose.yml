@@ -1,0 +1,4 @@
+frontend:
+  image: thoughtworksturkey/marketwatcher-haproxy
+  ports:
+    - "80:80"
