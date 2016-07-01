@@ -3,6 +3,8 @@
 DIR=`dirname $(readlink -f $0)`
 OLDPWD=`pwd`
 
+export COMPOSE_PROJECT_NAME=marketwatcher-loadbalancer
+
 cd $DIR/../
 
 ecs-cli configure \
@@ -17,9 +19,6 @@ if [ $CONFIGURE_RESULT -ne 0 ]; then
 	exit $CONFIGURE_RESULT
 fi
 
-# ecs-cli up --keypair marketwatcher --capability-iam --size 1 --instance-type t2.medium
-
-COMPOSE_PROJECT_NAME=marketwatcher-loadbalancer \
 ecs-cli compose --file docker-compose.yml service down
 
 DOWN_RESULT=$?
@@ -28,10 +27,9 @@ if [ $DOWN_RESULT -ne 0 ]; then
 	exit $DOWN_RESULT
 fi
 
-COMPOSE_PROJECT_NAME=marketwatcher-loadbalancer \
-	ecs-cli compose \
-	--file docker-compose.yml \
-	service up
+sleep 30
+
+ecs-cli compose --file docker-compose.yml service up
 
 UP_RESULT=$?
 if [ $UP_RESULT -ne 0 ]; then
